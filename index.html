@@ -1,8 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Seja uma Revenda Autorizada Nevon</title>
   <style>
     body {
@@ -13,7 +14,7 @@
     }
 
     header {
-      background: url('https://i.imgur.com/r98mx6a.png') no-repeat center center;
+      background: url('https://i.imgur.com/eXNpAZW.png') no-repeat center center;
       background-size: cover;
       height: 400px;
       display: flex;
@@ -21,12 +22,12 @@
       justify-content: center;
       color: white;
       text-align: center;
-      padding: 0 1rem;
     }
 
     header h1 {
       font-size: 2.5rem;
       text-shadow: 0 0 10px rgba(0,0,0,0.6);
+      padding: 0 1rem;
     }
 
     main {
@@ -55,21 +56,11 @@
       gap: 1rem;
     }
 
-    label {
-      text-align: left;
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-      display: block;
-      color: #000;
-    }
-
     input, textarea, select, button {
       padding: 0.75rem;
       font-size: 1rem;
       border: 1px solid #ccc;
       border-radius: 4px;
-      width: 100%;
-      box-sizing: border-box;
     }
 
     button {
@@ -77,7 +68,6 @@
       color: white;
       cursor: pointer;
       transition: background 0.3s ease;
-      font-weight: 700;
     }
 
     button:hover {
@@ -107,23 +97,22 @@
   </header>
   <main>
     <h2>Cadastre sua empresa para ser uma revenda autorizada</h2>
-    <p>Este formulário é exclusivo para revendas que atuam com pedidos corporativos e em volume. Se você busca compras em pequenas quantidades, indicamos nossa <a href="#">loja especializada</a>.</p>
+    <p>Este formulário é exclusivo para revendas que atuam com pedidos corporativos e em volume. Se você busca compras em pequenas quantidades, indicamos nossa <a href="https://www.nevonstore.com.br/">loja especializada</a>.</p>
     <form id="formulario-revenda">
       <input type="text" id="empresa" placeholder="Nome da Empresa" required />
       <input type="text" id="cnpj" placeholder="CNPJ" required />
       <input type="text" id="responsavel" placeholder="Nome do Responsável" required />
       <input type="email" id="email" placeholder="E-mail Comercial" required />
       <input type="tel" id="telefone" placeholder="Telefone/WhatsApp" required />
-
-      <label for="interesse">Itens de Interesse:</label>
-      <select id="interesse" name="interesse" required>
-        <option value="">Selecione</option>
-        <option value="jaquetas">Jaquetas</option>
-        <option value="fleeces">Fleeces</option>
-        <option value="luvas">Luvas</option>
-        <option value="outros">Outros</option>
+      <select id="itens" required>
+        <option value="">Itens de Interesse</option>
+        <option value="Coletes">Coletes</option>
+        <option value="Corta Ventos">Corta Ventos</option>
+        <option value="Capas de Chuva">Capas de Chuva</option>
+        <option value="Fleece">Fleece</option>
+        <option value="Jaquetas">Jaquetas</option>
+        <option value="Conjuntos">Conjuntos</option>
       </select>
-
       <textarea id="mensagem" placeholder="Conte um pouco sobre sua atuação como revenda" rows="4" required></textarea>
       <button type="submit">Enviar Cadastro</button>
     </form>
@@ -131,10 +120,7 @@
   </main>
   <footer>
     <p>&copy; 2025 Nevon. Todos os direitos reservados.</p>
-    <p>
-      <a href="#">Acesse nosso site institucional</a> | 
-      <a href="https://www.nevonstore.com.br/" target="_blank" rel="noopener noreferrer">Precisa de poucos itens? Acesse aqui</a>
-    </p>
+    <p><a href="#">Acesse nosso site institucional</a> | <a href="https://www.nevonstore.com.br/">Precisa de poucos itens? Acesse aqui</a></p>
   </footer>
 
   <script>
@@ -146,7 +132,7 @@
       const responsavel = document.getElementById("responsavel").value;
       const email = document.getElementById("email").value;
       const telefone = document.getElementById("telefone").value;
-      const interesse = document.getElementById("interesse").value;
+      const itens = document.getElementById("itens").value;
       const mensagem = document.getElementById("mensagem").value;
 
       const payload = {
@@ -155,7 +141,7 @@
           NAME: responsavel,
           PHONE: [{ VALUE: telefone, VALUE_TYPE: "WORK" }],
           EMAIL: [{ VALUE: email, VALUE_TYPE: "WORK" }],
-          COMMENTS: `Empresa: ${empresa}\nCNPJ: ${cnpj}\nItens de Interesse: ${interesse}\nMensagem: ${mensagem}`
+          COMMENTS: `Empresa: ${empresa}\nCNPJ: ${cnpj}\nItens de Interesse: ${itens}\nMensagem: ${mensagem}`
         }
       };
 
