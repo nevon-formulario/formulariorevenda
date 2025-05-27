@@ -13,22 +13,23 @@
     }
 
     header {
-      background: url('https://i.imgur.com/5XEp0JL.png') no-repeat center center;
+      background: url('https://i.imgur.com/91mF5pu.png') no-repeat center top;
       background-size: cover;
-      height: 40vh;
       min-height: 250px;
+      height: 45vh;
       display: flex;
-      align-items: center;
+      align-items: flex-end;
       justify-content: center;
       color: white;
       text-align: center;
-      padding: 1rem;
+      padding: 4rem 1rem 2rem 1rem;
     }
 
     header h1 {
-      font-size: 2.5rem;
+      font-size: 2.5vw;
       text-shadow: 0 0 10px rgba(0,0,0,0.6);
       padding: 0 1rem;
+      max-width: 90%;
     }
 
     main {
@@ -93,11 +94,17 @@
 
     @media (max-width: 768px) {
       header h1 {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
+      }
+
+      header {
+        padding: 4rem 1rem 2rem 1rem;
+        height: auto;
+        background-position: center top;
       }
 
       main h2 {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
       }
 
       input, textarea, select, button {
