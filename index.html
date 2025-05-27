@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seja uma Revenda Autorizada Nevon</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Proxima Nova', sans-serif;
+      background-color: #f8f8f8;
+      color: #1a1a1a;
+    }
+    header {
+      background: url('https://cdn.jsdelivr.net/gh/openai-sample-assets/banner-nevon.jpg') no-repeat center center;
+      background-size: cover;
+      height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align: center;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      text-shadow: 0 0 10px rgba(0,0,0,0.6);
+      padding: 0 1rem;
+    }
+    main {
+      background-color: #84BD00;
+      padding: 3rem 1rem;
+      text-align: center;
+      color: #000;
+    }
+    main h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    main p {
+      max-width: 600px;
+      margin: 0 auto 2rem auto;
+      font-size: 1rem;
+    }
+    form {
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    input, textarea, select, button {
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #000000;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #333;
+    }
+    footer {
+      background-color: #000000;
+      color: white;
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+    footer a {
+      color: #84BD00;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Seja uma revenda autorizada Nevon<br />Performance do seu jeito</h1>
+  </header>
+  <main>
+    <h2>Cadastre sua empresa para ser uma revenda autorizada</h2>
+    <p>Este formulário é exclusivo para revendas que atuam com pedidos corporativos e em volume. Se você busca compras em pequenas quantidades, indicamos nossa <a href="#">loja especializada</a>.</p>
+    <form id="formulario-revenda">
+      <input type="text" id="empresa" placeholder="Nome da Empresa" required />
+      <input type="text" id="cnpj" placeholder="CNPJ" required />
+      <input type="text" id="responsavel" placeholder="Nome do Responsável" required />
+      <input type="email" id="email" placeholder="E-mail Comercial" required />
+      <input type="tel" id="telefone" placeholder="Telefone/WhatsApp" required />
+      <textarea id="mensagem" placeholder="Conte um pouco sobre sua atuação como revenda" rows="4" required></textarea>
+      <button type="submit">Enviar Cadastro</button>
+    </form>
+    <p id="retorno" style="margin-top: 1rem; font-weight: bold;"></p>
+  </main>
+  <footer>
+    <p>&copy; 2025 Nevon. Todos os direitos reservados.</p>
+    <p><a href="#">Acesse nosso site institucional</a> | <a href="#">Precisa de poucos itens? Acesse aqui</a></p>
+  </footer>
+
+  <script>
+    document.getElementById("formulario-revenda").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const empresa = document.getElementById("empresa").value;
+      const cnpj = document.getElementById("cnpj").value;
+      const responsavel = document.getElementById("responsavel").value;
+      const email = document.getElementById("email").value;
+      const telefone = document.getElementById("telefone").value;
+      const mensagem = document.getElementById("mensagem").value;
+
+      const payload = {
+        fields: {
+          TITLE: `Cadastro de Revenda - ${empresa}`,
+          NAME: responsavel,
+          PHONE: [{ VALUE: telefone, VALUE_TYPE: "WORK" }],
+          EMAIL: [{ VALUE: email, VALUE_TYPE: "WORK" }],
+          COMMENTS: `Empresa: ${empresa}\nCNPJ: ${cnpj}\nMensagem: ${mensagem}`
+        }
+      };
+
+      fetch("https://nevon.bitrix24.com.br/rest/5/m7h6kmd10cm2hpnk/crm.lead.add.json", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("retorno").textContent = "Cadastro enviado com sucesso!";
+        document.getElementById("formulario-revenda").reset();
+      })
+      .catch(error => {
+        document.getElementById("retorno").textContent = "Erro ao enviar. Tente novamente.";
+        console.error("Erro:", error);
+      });
+    });
+  </script>
+</body>
+</html>
