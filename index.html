@@ -1,187 +1,46 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Seja uma Revenda Autorizada Nevon</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Proxima Nova', sans-serif;
-      background-color: #f8f8f8;
-      color: #1a1a1a;
-    }
+<script>
+  document.getElementById("formulario-revenda").addEventListener("submit", function(e) {
+    e.preventDefault();
 
-    header {
-      background: url('https://i.imgur.com/91mF5pu.png') no-repeat center top;
-      background-size: cover;
-      min-height: 250px;
-      height: 45vh;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      color: white;
-      text-align: center;
-      padding: 4rem 1rem 2rem 1rem;
-    }
+    const empresa = document.getElementById("empresa").value;
+    const cnpj = document.getElementById("cnpj").value;
+    const responsavel = document.getElementById("responsavel").value;
+    const email = document.getElementById("email").value;
+    const telefone = document.getElementById("telefone").value;
+    const itens = document.getElementById("itens").value;
+    const mensagem = document.getElementById("mensagem").value;
 
-    header h1 {
-      font-size: 2.5vw;
-      text-shadow: 0 0 10px rgba(0,0,0,0.6);
-      padding: 0 1rem;
-      max-width: 90%;
-    }
+    // Limpa a mensagem de retorno anterior
+    document.getElementById("retorno").textContent = "";
+    document.getElementById("retorno").style.color = "initial"; // Reseta a cor
 
-    main {
-      background-color: #84BD00;
-      padding: 3rem 1rem;
-      text-align: center;
-      color: #000;
-    }
-
-    main h2 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-    }
-
-    main p {
-      max-width: 600px;
-      margin: 0 auto 2rem auto;
-      font-size: 1rem;
-    }
-
-    form {
-      max-width: 600px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    input, textarea, select, button {
-      padding: 0.75rem;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-
-    button {
-      background-color: #000000;
-      color: white;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #333;
-    }
-
-    footer {
-      background-color: #000000;
-      color: white;
-      padding: 2rem 1rem;
-      text-align: center;
-    }
-
-    footer a {
-      color: #84BD00;
-      text-decoration: none;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-    }
-
-    @media (max-width: 768px) {
-      header h1 {
-        font-size: 1.6rem;
+    const payload = {
+      fields: {
+        TITLE: `Cadastro de Revenda - ${empresa}`, // Título do Lead
+        NAME: responsavel,                       // Nome do Contato associado ao Lead
+        // COMPANY_TITLE: empresa,               // Opcional: Se quiser preencher o campo "Empresa" do Lead diretamente
+        PHONE: [{ VALUE: telefone, VALUE_TYPE: "WORK" }],
+        EMAIL: [{ VALUE: email, VALUE_TYPE: "WORK" }],
+        COMMENTS: `Empresa: ${empresa}\nCNPJ: ${cnpj}\nItens de Interesse: ${itens}\nMensagem: ${mensagem}`,
+        // Se precisar mapear CNPJ, Itens de Interesse para campos específicos no Bitrix24,
+        // você precisará usar os IDs dos campos personalizados (UF_CRM_XXXXX).
+        // Exemplo:
+        // "UF_CRM_123456789": cnpj, // Substitua UF_CRM_123456789 pelo ID real do campo CNPJ
+        // "UF_CRM_987654321": itens // Substitua UF_CRM_987654321 pelo ID real do campo Itens de Interesse
+      },
+      params: {
+        REGISTER_SONET_EVENT: "Y" // Opcional: Para registrar o evento no feed do Bitrix24
       }
+    };
 
-      header {
-        padding: 4rem 1rem 2rem 1rem;
-        height: auto;
-        background-position: center top;
-      }
-
-      main h2 {
-        font-size: 1.4rem;
-      }
-
-      input, textarea, select, button {
-        font-size: 0.95rem;
-      }
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <h1>Junte-se à rede de revendas Nevon!<br />Qualidade e proteção que sua empresa merece.</h1>
-  </header>
-  <main>
-    <h2>Cadastre sua empresa para ser uma revenda autorizada</h2>
-    <p>Nós atuamos com empresas com pedidos em volume. Para pedidos pequenos, pode preencher este formulário e também indicamos comprar pela <a href="https://www.nevonstore.com.br/">Nevon Store</a>.</p>
-    <form id="formulario-revenda">
-      <input type="text" id="empresa" placeholder="Nome da Empresa" required />
-      <input type="text" id="cnpj" placeholder="CNPJ" required />
-      <input type="text" id="responsavel" placeholder="Nome do Responsável" required />
-      <input type="email" id="email" placeholder="E-mail Comercial" required />
-      <input type="tel" id="telefone" placeholder="Telefone/WhatsApp" required />
-      <select id="itens" required>
-        <option value="">Itens de Interesse</option>
-        <option value="Coletes">Coletes</option>
-        <option value="Corta Ventos">Corta Ventos</option>
-        <option value="Capas de Chuva">Capas de Chuva</option>
-        <option value="Fleece">Fleece</option>
-        <option value="Jaquetas">Jaquetas</option>
-        <option value="Conjuntos">Conjuntos</option>
-      </select>
-      <textarea id="mensagem" placeholder="Conte um pouco sobre sua atuação como revenda" rows="4" required></textarea>
-      <button type="submit">Enviar Cadastro</button>
-    </form>
-    <p id="retorno" style="margin-top: 1rem; font-weight: bold;"></p>
-  </main>
-  <footer>
-    <p>&copy; 2025 Nevon. Todos os direitos reservados.</p>
-    <p><a href="https://www.nevon.com.br/">Acesse nosso site institucional</a> | <a href="https://www.nevonstore.com.br/">Precisa de poucos itens? Acesse aqui</a></p>
-  </footer>
-
-  <script>
-    document.getElementById("formulario-revenda").addEventListener("submit", function(e) {
-      e.preventDefault();
-
-      const empresa = document.getElementById("empresa").value;
-      const cnpj = document.getElementById("cnpj").value;
-      const responsavel = document.getElementById("responsavel").value;
-      const email = document.getElementById("email").value;
-      const telefone = document.getElementById("telefone").value;
-      const itens = document.getElementById("itens").value;
-      const mensagem = document.getElementById("mensagem").value;
-
-      const payload = {
-        fields: {
-          TITLE: `Cadastro de Revenda - ${empresa}`,
-          NAME: responsavel,
-          PHONE: [{ VALUE: telefone, VALUE_TYPE: "WORK" }],
-          EMAIL: [{ VALUE: email, VALUE_TYPE: "WORK" }],
-          COMMENTS: `Empresa: ${empresa}\nCNPJ: ${cnpj}\nItens de Interesse: ${itens}\nMensagem: ${mensagem}`
-        }
-      };
-
-      fetch("https://nevon.bitrix24.com.br/rest/5/m7h6kmd10cm2hpnk/crm.lead.add.json", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      })
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById("retorno").textContent = "Cadastro enviado com sucesso!";
-        document.getElementById("formulario-revenda").reset();
-      })
-      .catch(error => {
-        document.getElementById("retorno").textContent = "Erro ao enviar. Tente novamente.";
-        console.error("Erro:", error);
-      });
-    });
-  </script>
-</body>
-</html>
+    // URL ATUALIZADA COM O WEBHOOK DA IMAGEM:
+    fetch("https://nevon.bitrix24.com.br/rest/5/s8h88jpjk5qqc36h/crm.lead.add.json", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    })
+    .then(response => {
+      // Mesmo que a resposta seja 2xx, o Bitrix pode ter um erro no corpo JSON
+      if (!response.ok) {
+         // Loga a resposta se não for OK para ajudar na depuração
+        response.text
