@@ -10,37 +10,63 @@
     const itens = document.getElementById("itens").value;
     const mensagem = document.getElementById("mensagem").value;
 
-    // Limpa a mensagem de retorno anterior
     document.getElementById("retorno").textContent = "";
-    document.getElementById("retorno").style.color = "initial"; // Reseta a cor
+    document.getElementById("retorno").style.color = "initial";
 
     const payload = {
       fields: {
-        TITLE: `Cadastro de Revenda - ${empresa}`, // Título do Lead
-        NAME: responsavel,                       // Nome do Contato associado ao Lead
-        // COMPANY_TITLE: empresa,               // Opcional: Se quiser preencher o campo "Empresa" do Lead diretamente
+        TITLE: `Cadastro de Revenda - ${empresa}`,
+        NAME: responsavel,
         PHONE: [{ VALUE: telefone, VALUE_TYPE: "WORK" }],
         EMAIL: [{ VALUE: email, VALUE_TYPE: "WORK" }],
-        COMMENTS: `Empresa: ${empresa}\nCNPJ: ${cnpj}\nItens de Interesse: ${itens}\nMensagem: ${mensagem}`,
-        // Se precisar mapear CNPJ, Itens de Interesse para campos específicos no Bitrix24,
-        // você precisará usar os IDs dos campos personalizados (UF_CRM_XXXXX).
-        // Exemplo:
-        // "UF_CRM_123456789": cnpj, // Substitua UF_CRM_123456789 pelo ID real do campo CNPJ
-        // "UF_CRM_987654321": itens // Substitua UF_CRM_987654321 pelo ID real do campo Itens de Interesse
+        COMMENTS: `Empresa: ${empresa}\nCNPJ: ${cnpj}\nItens de Interesse: ${itens}\nMensagem: ${mensagem}`
       },
       params: {
-        REGISTER_SONET_EVENT: "Y" // Opcional: Para registrar o evento no feed do Bitrix24
+        REGISTER_SONET_EVENT: "Y"
       }
     };
 
-    // URL ATUALIZADA COM O WEBHOOK DA IMAGEM:
     fetch("https://nevon.bitrix24.com.br/rest/5/s8h88jpjk5qqc36h/crm.lead.add.json", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     })
     .then(response => {
-      // Mesmo que a resposta seja 2xx, o Bitrix pode ter um erro no corpo JSON
       if (!response.ok) {
-         // Loga a resposta se não for OK para ajudar na depuração
-        response.text
+        // Se a resposta não for OK, pegamos o texto dela e lançamos um erro
+        return response.text().then(text => {
+          console.error(`Erro HTTP: ${response.status}. Resposta do servidor: ${text}`);
+          throw new Error(`Erro HTTP ${response.status}: ${text}`); // Lança o erro para ser pego pelo .catch()
+        });
+      }
+      // Se a resposta for OK, prossiga para convertê-la para JSON
+      return response.json();
+    })
+    .then(data => {
+      // Este .then() é para processar o JSON de uma resposta bem-sucedida (response.ok === true)
+      console.log("Resposta completa do Bitrix24:", data);
+
+      if (data.error) {
+        document.getElementById("retorno").textContent = `Erro do Bitrix24: ${data.error_description || data.error}`;
+        document.getElementById("retorno").style.color = "red";
+        console.error("Erro do Bitrix24:", data.error, data.error_description);
+      } else if (data.result) {
+        document.getElementById("retorno").textContent = "Cadastro enviado com sucesso! Em breve entraremos em contato.";
+        document.getElementById("retorno").style.color = "green";
+        document.getElementById("formulario-revenda").reset();
+      } else {
+        document.getElementById("retorno").textContent = "Resposta inesperada do servidor (JSON não padrão Bitrix). Verifique o console.";
+        document.getElementById("retorno").style.color = "orange";
+        console.warn("Resposta inesperada do Bitrix24 (JSON):", data);
+      }
+    })
+    .catch(error => {
+      // Pega erros de rede ou os erros lançados manualmente (ex: de !response.ok)
+      document.getElementById("retorno").textContent = "Erro ao enviar o cadastro. Verifique sua conexão ou tente novamente. Detalhes no console.";
+      document.getElementById("retorno").style.color = "red";
+      // O objeto de erro já deve conter os detalhes que precisamos
+      console.error("Erro na requisição fetch ou processamento:", error.message);
+       // Se quiser logar o objeto de erro inteiro: console.error(error);
+    });
+  });
+ </script>
